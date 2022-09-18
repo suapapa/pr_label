@@ -6,7 +6,7 @@ import (
 
 	"github.com/fogleman/gg"
 	"github.com/pkg/errors"
-	"github.com/suapapa/print_address_label/draw"
+	"github.com/suapapa/pr_ord_addr_label/draw"
 	"golang.org/x/image/font"
 )
 
