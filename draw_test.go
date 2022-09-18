@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/json"
+	"os"
 	"testing"
 
 	"github.com/pkg/errors"
@@ -20,6 +22,15 @@ var (
 		PhoneNumber: "010-7656-0329",
 	}
 )
+
+func TestPrintOrder(t *testing.T) {
+	ord := Order{
+		ID:   "1234567890",
+		From: from,
+		To:   to,
+	}
+	json.NewEncoder(os.Stdout).Encode(&ord)
+}
 
 func TestDrawAddressXXX(t *testing.T) {
 	img, err := drawAddressFrom(from)
