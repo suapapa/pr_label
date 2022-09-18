@@ -16,8 +16,8 @@ const (
 	Landscape Orient = iota
 	Portrait
 
-	ql800MaxWidth = 696 // 62mm endless
-	tmpPngPath    = "/tmp/addr.png"
+	ql800MaxPix = 696 // 62mm endless
+	tmpPngPath  = "/tmp/addr.png"
 )
 
 func printAddrFrom(addr *Addr) error {

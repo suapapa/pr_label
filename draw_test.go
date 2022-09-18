@@ -55,7 +55,8 @@ func TestDrawAddress(t *testing.T) {
 		from.Name,
 		from.PhoneNumber,
 		fsFromAddr, fsFromName,
-		ql800MaxWidth,
+		ql800MaxPix,
+		-1,
 	)
 	if err != nil {
 		t.Error(errors.Wrap(err, "fail to draw address"))
@@ -69,7 +70,8 @@ func TestDrawAddress(t *testing.T) {
 		to.Name,
 		to.PhoneNumber,
 		fsToAddr, fsToName,
-		(ql800MaxWidth*3)/2,
+		(ql800MaxPix*3)/2,
+		ql800MaxPix,
 	)
 	if err != nil {
 		t.Error(errors.Wrap(err, "fail to draw address"))
