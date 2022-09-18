@@ -19,15 +19,16 @@ type Addr struct {
 	PostNumber  string `json:"post_number,omitempty"`
 }
 
-type Envelope struct {
-	From *Addr `json:"from"`
-	To   *Addr `json:"to"`
+type Order struct {
+	ID   string `jsong:"id,omitempty"`
+	From *Addr  `json:"from"`
+	To   *Addr  `json:"to"`
 }
 
 func v1AddrHandler(c *gin.Context) {
-	var env Envelope
-	c.BindJSON(&env)
+	var ord Order
+	c.BindJSON(&ord)
 
-	printAddrFrom(env.From)
-	printAddrTo(env.To)
+	printAddrFrom(ord.From)
+	printAddrTo(ord.To)
 }
