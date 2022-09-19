@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"log"
 	"net/http"
 	"time"
@@ -10,10 +12,15 @@ import (
 )
 
 var (
+	flagPort int
+
 	q *OrderQ
 )
 
 func main() {
+	flag.IntVar(&flagPort, "p", 8080, "port to serve")
+	flag.Parse()
+
 	q = NewOrderQ(DefaultOrderQLen)
 	go printLoop()
 
@@ -22,7 +29,9 @@ func main() {
 	{
 		v1.POST("/order", v1OrderHandler)
 	}
-	r.Run()
+	if err := r.Run(fmt.Sprintf(":%d", flagPort)); err != nil {
+		log.Fatal("fail on server run")
+	}
 }
 
 func v1OrderHandler(c *gin.Context) {
