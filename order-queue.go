@@ -1,6 +1,9 @@
 package main
 
-import "errors"
+import (
+	"errors"
+	"sync"
+)
 
 const (
 	DefaultOrderQLen = 100
@@ -9,6 +12,7 @@ const (
 type OrderQ struct {
 	q               []*Order
 	pushIdx, popIdx int
+	sync.RWMutex
 }
 
 func NewOrderQ(qSize int) *OrderQ {
@@ -18,10 +22,16 @@ func NewOrderQ(qSize int) *OrderQ {
 }
 
 func (q *OrderQ) IsEmpty() bool {
+	q.RLock()
+	defer q.RUnlock()
+
 	return q.pushIdx == q.popIdx
 }
 
 func (q *OrderQ) IsFull() bool {
+	q.RLock()
+	defer q.RUnlock()
+
 	if q.popIdx < q.pushIdx {
 		return (q.pushIdx - q.popIdx) == len(q.q)-1
 	} else if q.popIdx > q.pushIdx {
@@ -34,6 +44,9 @@ func (q *OrderQ) Push(o *Order) error {
 	if q.IsFull() {
 		return errors.New("full Q")
 	}
+
+	q.Lock()
+	defer q.Unlock()
 
 	q.q[q.pushIdx] = o
 	q.pushIdx += 1
@@ -48,6 +61,9 @@ func (q *OrderQ) Pop() (*Order, error) {
 	if q.IsEmpty() {
 		return nil, errors.New("empty Q")
 	}
+
+	q.Lock()
+	defer q.Unlock()
 
 	ret := q.q[q.popIdx]
 	q.popIdx -= 1
