@@ -3,7 +3,6 @@ package main
 import (
 	"image"
 	"image/png"
-	"log"
 	"os"
 	"os/exec"
 
@@ -29,12 +28,10 @@ func printAddrFrom(addr *Addr) error {
 		return errors.Wrap(err, "fail to print from")
 	}
 
-	out, err := exec.Command("sh", "-c", "brother_ql -b pyusb -p usb://04f9:209b -m QL-800 print -l 62red --red "+tmpPngPath).Output()
+	err = exec.Command("sh", "-c", "brother_ql -b pyusb -p usb://04f9:209b -m QL-800 print -l 62red --red "+tmpPngPath).Run()
 	if err != nil {
 		return errors.Wrap(err, "fail to print from")
 	}
-
-	log.Println(out)
 
 	return nil
 }
@@ -48,12 +45,10 @@ func printAddrTo(addr *Addr) error {
 		return errors.Wrap(err, "fail to print from")
 	}
 
-	out, err := exec.Command("sh", "-c", "brother_ql -b pyusb -p usb://04f9:209b -m QL-800 print -r 90 -l 62red --red "+tmpPngPath).Output()
+	err = exec.Command("sh", "-c", "brother_ql -b pyusb -p usb://04f9:209b -m QL-800 print -r 90 -l 62red --red "+tmpPngPath).Run()
 	if err != nil {
 		return errors.Wrap(err, "fail to print from")
 	}
-
-	log.Println(out)
 
 	return nil
 }

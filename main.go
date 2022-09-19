@@ -61,14 +61,20 @@ func v1OrderHandler(c *gin.Context) {
 }
 
 func printLoop() {
-	for !q.IsEmpty() {
-		ord, err := q.Pop()
-		if err != nil {
-			log.Printf("ERR: %v", errors.Wrap(err, "print will be stopped"))
-			return
+	log.Println("printLoop started")
+	tk := time.NewTicker(time.Second)
+	defer tk.Stop()
+	for range tk.C {
+		if !q.IsEmpty() {
+			// log.Println("somthin in q")
+			ord, err := q.Pop()
+			if err != nil {
+				log.Printf("ERR: %v", errors.Wrap(err, "print will be stopped"))
+				return
+			}
+			printAddrFrom(ord.From)
+			printAddrTo(ord.To)
+			time.Sleep(time.Second)
 		}
-		printAddrFrom(ord.From)
-		printAddrTo(ord.To)
-		time.Sleep(time.Second)
 	}
 }

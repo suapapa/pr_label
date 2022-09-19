@@ -66,9 +66,9 @@ func (q *OrderQ) Pop() (*Order, error) {
 	defer q.Unlock()
 
 	ret := q.q[q.popIdx]
-	q.popIdx -= 1
-	if q.popIdx < 0 {
-		q.popIdx = len(q.q) - 1
+	q.popIdx += 1
+	if q.popIdx >= len(q.q) {
+		q.popIdx = 0
 	}
 
 	return ret, nil
