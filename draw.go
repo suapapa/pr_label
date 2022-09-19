@@ -12,7 +12,7 @@ import (
 
 const (
 	// font size
-	fsFromAddr = 36
+	fsFromAddr = 46
 	fsFromName = 48
 	fsToAddr   = 100
 	fsToName   = 120

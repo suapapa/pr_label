@@ -1,6 +1,11 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	"net/http"
+
+	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
+)
 
 func main() {
 	r := gin.Default()
@@ -13,8 +18,19 @@ func main() {
 
 func v1OrderHandler(c *gin.Context) {
 	var ord Order
-	c.BindJSON(&ord)
+	if err := c.BindJSON(&ord); err != nil {
+		ret := map[string]any{
+			"status": http.StatusBadRequest,
+			"msg":    errors.Wrap(err, "print order failed"),
+		}
+		c.JSON(http.StatusBadRequest, ret)
+	}
 
 	printAddrFrom(ord.From)
 	printAddrTo(ord.To)
+
+	ret := map[string]any{
+		"status": http.StatusOK,
+	}
+	c.JSON(http.StatusOK, ret)
 }
