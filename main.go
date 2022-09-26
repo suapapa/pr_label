@@ -72,6 +72,7 @@ func printLoop() {
 				log.Printf("ERR: %v", errors.Wrap(err, "print will be stopped"))
 				return
 			}
+			printItems(ord.Items)
 			printAddrFrom(ord.From)
 			printAddrTo(ord.To)
 			time.Sleep(time.Second)

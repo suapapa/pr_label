@@ -16,8 +16,26 @@ const (
 	Portrait
 
 	ql800MaxPix = 696 // 62mm endless
-	tmpPngPath  = "/tmp/addr.png"
+	tmpPngPath  = "/tmp/order_pic.png"
 )
+
+func printItems(items []*Item) error {
+	img, err := drawItems(items)
+	if err != nil {
+		return errors.Wrap(err, "fail to print from")
+	}
+	if err = saveImg2Png(img, tmpPngPath); err != nil {
+		return errors.Wrap(err, "fail to print from")
+	}
+
+	// err = exec.Command("sh", "-c", "brother_ql -b pyusb -p usb://04f9:209b -m QL-800 print -l 62red --red "+tmpPngPath).Run()
+	err = exec.Command("sh", "-c", "brother_ql -b pyusb -p usb://04f9:209b -m QL-800 print -l 62 "+tmpPngPath).Run()
+	if err != nil {
+		return errors.Wrap(err, "fail to print from")
+	}
+
+	return nil
+}
 
 func printAddrFrom(addr *Addr) error {
 	img, err := drawAddressFrom(addr)
@@ -28,7 +46,8 @@ func printAddrFrom(addr *Addr) error {
 		return errors.Wrap(err, "fail to print from")
 	}
 
-	err = exec.Command("sh", "-c", "brother_ql -b pyusb -p usb://04f9:209b -m QL-800 print -l 62red --red "+tmpPngPath).Run()
+	// err = exec.Command("sh", "-c", "brother_ql -b pyusb -p usb://04f9:209b -m QL-800 print -l 62red --red "+tmpPngPath).Run()
+	err = exec.Command("sh", "-c", "brother_ql -b pyusb -p usb://04f9:209b -m QL-800 print -l 62 "+tmpPngPath).Run()
 	if err != nil {
 		return errors.Wrap(err, "fail to print from")
 	}
@@ -45,7 +64,8 @@ func printAddrTo(addr *Addr) error {
 		return errors.Wrap(err, "fail to print from")
 	}
 
-	err = exec.Command("sh", "-c", "brother_ql -b pyusb -p usb://04f9:209b -m QL-800 print -r 90 -l 62red --red "+tmpPngPath).Run()
+	// err = exec.Command("sh", "-c", "brother_ql -b pyusb -p usb://04f9:209b -m QL-800 print -r 90 -l 62red --red "+tmpPngPath).Run()
+	err = exec.Command("sh", "-c", "brother_ql -b pyusb -p usb://04f9:209b -m QL-800 print -r 90 -l 62 "+tmpPngPath).Run()
 	if err != nil {
 		return errors.Wrap(err, "fail to print from")
 	}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"image"
 	"image/color"
 
@@ -14,9 +15,38 @@ const (
 	// font size
 	fsFromAddr = 46
 	fsFromName = 48
-	fsToAddr   = 100
-	fsToName   = 120
+	fsToAddr   = 98
+	fsToName   = 90
+	fsOrd      = 60
 )
+
+func drawItems(items []*Item) (image.Image, error) {
+	var ordLines []string
+	lineSpacing := 5
+	for _, item := range items {
+		ordLines = append(ordLines, fmt.Sprintf("- %s x %dea", item.Name, item.Cnt))
+	}
+
+	mw := ql800MaxPix
+	var ordF font.Face
+	var err error
+	if ordF, err = draw.GetFont(fsOrd); err != nil {
+		return nil, errors.Wrap(err, "fail to draw from")
+	}
+
+	mh := int(fsOrd+lineSpacing)*len(items) + fsOrd
+	dc := gg.NewContext(mw, mh)
+	dc.SetColor(color.White)
+	dc.Clear()
+	dc.SetColor(color.Black)
+	dc.SetFontFace(ordF)
+	var y float64
+	for _, line := range ordLines {
+		y += (fsOrd + float64(lineSpacing))
+		dc.DrawStringAnchored(line, 5, y, 0, 0)
+	}
+	return dc.Image(), nil
+}
 
 func drawAddressFrom(addr *Addr) (image.Image, error) {
 	mw := ql800MaxPix
@@ -30,7 +60,7 @@ func drawAddressFrom(addr *Addr) (image.Image, error) {
 	addrLines = append(addrLines, draw.FitToLines(addrF, mw, addr.Line1)...)
 	addrLines = append(addrLines, draw.FitToLines(addrF, mw, addr.Line2)...)
 
-	img, err := drawAddress(addrLines, addr.Name, addr.PhoneNumber, fsFromAddr, fsFromName, mw, -1)
+	img, err := drawAddress(addrLines, addr.Name, addr.PostNumber, fsFromAddr, fsFromName, mw, -1)
 	if err != nil {
 		return nil, errors.Wrap(err, "fail to draw from")
 	}
@@ -49,7 +79,7 @@ func drawAddressTo(addr *Addr) (image.Image, error) {
 	addrLines = append(addrLines, draw.FitToLines(addrF, mw, addr.Line1)...)
 	addrLines = append(addrLines, draw.FitToLines(addrF, mw, addr.Line2)...)
 
-	img, err := drawAddress(addrLines, addr.Name, addr.PhoneNumber, fsToAddr, fsToName, mw, ql800MaxPix)
+	img, err := drawAddress(addrLines, addr.Name, addr.PostNumber, fsToAddr, fsToName, mw, ql800MaxPix)
 	if err != nil {
 		return nil, errors.Wrap(err, "fail to draw from")
 	}
@@ -67,8 +97,8 @@ func drawAddress(addrLines []string, name, pn string, addrFSize, nameFSize float
 	if err != nil {
 		return nil, err
 	}
-	phoneFSize := addrFSize / 2
-	phoneF, err := draw.GetFont(phoneFSize)
+	pnFSize := addrFSize * 0.8
+	pnF, err := draw.GetFont(pnFSize)
 	if err != nil {
 		return nil, err
 	}
@@ -80,7 +110,7 @@ func drawAddress(addrLines []string, name, pn string, addrFSize, nameFSize float
 	}
 
 	if varHeight {
-		height = int(addrFSize+5)*len(addrLines) + int(nameFSize+nameFSize*0.2+10)
+		height = int(addrFSize+5)*len(addrLines) + int(nameFSize+nameFSize*0.2+10) + int(pnFSize)
 	}
 	dc := gg.NewContext(width, height)
 	dc.SetColor(color.White)
@@ -91,19 +121,18 @@ func drawAddress(addrLines []string, name, pn string, addrFSize, nameFSize float
 		y += (addrFSize + 5)
 		dc.DrawStringAnchored(line, 5, y, 0, 0)
 	}
+	pn = fmt.Sprintf("우) %s", pn)
 	if varHeight {
 		y += (nameFSize + 5)
 		dc.SetFontFace(nameF)
 		dc.DrawStringAnchored(name, float64(width)-5, y, 1, 0)
-		dc.SetFontFace(phoneF)
+		dc.SetFontFace(pnF)
 		dc.DrawStringAnchored(pn, 5, y, 0, 0)
 	} else {
-		y = float64(height - 5)
-		dc.SetFontFace(phoneF)
-		// dc.DrawStringAnchored(pn, 5, y, 0, -1)
+		y = float64(height)
+		dc.SetFontFace(pnF)
 		dc.DrawStringAnchored(pn, float64(width)-5, y, 1, -1)
-		y -= (phoneFSize + 5)
-		y = float64(height - 5)
+		y -= (pnFSize + 5)
 		dc.SetFontFace(nameF)
 		dc.DrawStringAnchored(name, float64(width)-5, y, 1, -1)
 	}

@@ -9,38 +9,58 @@ import (
 )
 
 var (
-	from = &Addr{
-		Line1:       "경기 성남시 분당구 판교역로 235 (에이치스퀘어 엔동)",
-		Line2:       "7층",
-		Name:        "카카오 엔터프라이즈",
-		PhoneNumber: "010-1234-5678",
-	}
-	to = &Addr{
-		Line1:       "경기도 성남시 분당구 판교역로 166",
-		Line2:       "",
-		Name:        "판교 아지트",
-		PhoneNumber: "010-7656-0329",
+	ord = &Order{
+		ID: "20220926-01",
+		To: &Addr{
+			Line1:      "경기 성남시 분당구 판교역로 235 (에이치스퀘어 엔동)",
+			Line2:      "7층",
+			Name:       "카카오 엔터프라이즈",
+			PostNumber: "12345",
+		},
+		From: &Addr{
+			Line1:      "경기도 성남시 분당구 판교역로 166",
+			Line2:      "",
+			Name:       "판교 아지트",
+			PostNumber: "12345",
+		},
+		Items: []*Item{
+			{Name: "panic-01", Cnt: 3},
+			{Name: "defer-01", Cnt: 3},
+			{Name: "ch-01", Cnt: 3},
+		},
 	}
 )
 
 func TestPrintOrder(t *testing.T) {
 	ord := Order{
 		ID:   "1234567890",
-		From: from,
-		To:   to,
+		From: ord.From,
+		To:   ord.To,
 	}
-	json.NewEncoder(os.Stdout).Encode(&ord)
+	je := json.NewEncoder(os.Stdout)
+	je.SetIndent("", "  ")
+	je.Encode(&ord)
+}
+
+func TestDrawItems(t *testing.T) {
+	img, err := drawItems(ord.Items)
+	if err != nil {
+		t.Error(errors.Wrap(err, "fail to draw items"))
+	}
+	if err := saveImg2Png(img, "items.png"); err != nil {
+		t.Error(err)
+	}
 }
 
 func TestDrawAddressXXX(t *testing.T) {
-	img, err := drawAddressFrom(from)
+	img, err := drawAddressFrom(ord.From)
 	if err != nil {
 		t.Error(errors.Wrap(err, "fail to draw address"))
 	}
 	if err := saveImg2Png(img, "addr_from.png"); err != nil {
 		t.Error(err)
 	}
-	img, err = drawAddressTo(to)
+	img, err = drawAddressTo(ord.To)
 	if err != nil {
 		t.Error(errors.Wrap(err, "fail to draw address"))
 	}
@@ -50,6 +70,7 @@ func TestDrawAddressXXX(t *testing.T) {
 }
 
 func TestDrawAddress(t *testing.T) {
+	from, to := ord.From, ord.To
 	img, err := drawAddress(
 		[]string{from.Line1, from.Line2},
 		from.Name,
