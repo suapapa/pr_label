@@ -10,7 +10,7 @@ import (
 
 var (
 	ord = &Order{
-		ID: "20220926-01",
+		ID: 20220926,
 		To: &Addr{
 			Line1:      "경기 성남시 분당구 판교역로 235 (에이치스퀘어 엔동)",
 			Line2:      "7층",
@@ -33,7 +33,7 @@ var (
 
 func TestPrintOrder(t *testing.T) {
 	ord := Order{
-		ID:   "1234567890",
+		ID:   1234567890,
 		From: ord.From,
 		To:   ord.To,
 	}
@@ -43,7 +43,7 @@ func TestPrintOrder(t *testing.T) {
 }
 
 func TestDrawItems(t *testing.T) {
-	img, err := drawItems(ord.Items)
+	img, err := drawItems(45, ord.Items)
 	if err != nil {
 		t.Error(errors.Wrap(err, "fail to draw items"))
 	}
@@ -53,14 +53,14 @@ func TestDrawItems(t *testing.T) {
 }
 
 func TestDrawAddressXXX(t *testing.T) {
-	img, err := drawAddressFrom(ord.From)
+	img, err := drawAddressFrom(45, ord.From)
 	if err != nil {
 		t.Error(errors.Wrap(err, "fail to draw address"))
 	}
 	if err := saveImg2Png(img, "addr_from.png"); err != nil {
 		t.Error(err)
 	}
-	img, err = drawAddressTo(ord.To)
+	img, err = drawAddressTo(ord.ID, ord.To)
 	if err != nil {
 		t.Error(errors.Wrap(err, "fail to draw address"))
 	}
@@ -72,6 +72,7 @@ func TestDrawAddressXXX(t *testing.T) {
 func TestDrawAddress(t *testing.T) {
 	from, to := ord.From, ord.To
 	img, err := drawAddress(
+		ord.ID,
 		[]string{from.Line1, from.Line2},
 		from.Name,
 		from.PhoneNumber,
@@ -87,6 +88,7 @@ func TestDrawAddress(t *testing.T) {
 	}
 
 	img, err = drawAddress(
+		ord.ID,
 		[]string{to.Line1, to.Line2},
 		to.Name,
 		to.PhoneNumber,

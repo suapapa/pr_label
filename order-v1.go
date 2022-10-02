@@ -1,7 +1,7 @@
 package main
 
 type Order struct {
-	ID    string  `jsong:"id,omitempty"`
+	ID    int     `jsong:"id"`
 	From  *Addr   `json:"from"`
 	To    *Addr   `json:"to"`
 	Items []*Item `json:"items"`

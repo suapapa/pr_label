@@ -16,11 +16,11 @@ const (
 	fsFromAddr = 46
 	fsFromName = 48
 	fsToAddr   = 98
-	fsToName   = 90
+	fsToName   = 85
 	fsOrd      = 60
 )
 
-func drawItems(items []*Item) (image.Image, error) {
+func drawItems(ordID int, items []*Item) (image.Image, error) {
 	var ordLines []string
 	lineSpacing := 5
 	for _, item := range items {
@@ -45,10 +45,17 @@ func drawItems(items []*Item) (image.Image, error) {
 		y += (fsOrd + float64(lineSpacing))
 		dc.DrawStringAnchored(line, 5, y, 0, 0)
 	}
+
+	if ordF, err = draw.GetFont(20); err != nil {
+		return nil, errors.Wrap(err, "fail to draw from")
+	}
+	dc.SetFontFace(ordF)
+	dc.DrawStringAnchored(fmt.Sprintf("ord#%d", ordID), float64(mw), float64(mh), 1, -1)
+
 	return dc.Image(), nil
 }
 
-func drawAddressFrom(addr *Addr) (image.Image, error) {
+func drawAddressFrom(ordID int, addr *Addr) (image.Image, error) {
 	mw := ql800MaxPix
 	var addrF font.Face
 	var err error
@@ -60,14 +67,15 @@ func drawAddressFrom(addr *Addr) (image.Image, error) {
 	addrLines = append(addrLines, draw.FitToLines(addrF, mw, addr.Line1)...)
 	addrLines = append(addrLines, draw.FitToLines(addrF, mw, addr.Line2)...)
 
-	img, err := drawAddress(addrLines, addr.Name, addr.PostNumber, fsFromAddr, fsFromName, mw, -1)
+	img, err := drawAddress(ordID, addrLines, addr.Name, addr.PostNumber, fsFromAddr, fsFromName, mw, -1)
 	if err != nil {
 		return nil, errors.Wrap(err, "fail to draw from")
 	}
+
 	return img, nil
 }
 
-func drawAddressTo(addr *Addr) (image.Image, error) {
+func drawAddressTo(ordID int, addr *Addr) (image.Image, error) {
 	mw := (ql800MaxPix * 3) / 2
 	var addrF font.Face
 	var err error
@@ -79,7 +87,7 @@ func drawAddressTo(addr *Addr) (image.Image, error) {
 	addrLines = append(addrLines, draw.FitToLines(addrF, mw, addr.Line1)...)
 	addrLines = append(addrLines, draw.FitToLines(addrF, mw, addr.Line2)...)
 
-	img, err := drawAddress(addrLines, addr.Name, addr.PostNumber, fsToAddr, fsToName, mw, ql800MaxPix)
+	img, err := drawAddress(ordID, addrLines, addr.Name, addr.PostNumber, fsToAddr, fsToName, mw, ql800MaxPix)
 	if err != nil {
 		return nil, errors.Wrap(err, "fail to draw from")
 	}
@@ -88,7 +96,7 @@ func drawAddressTo(addr *Addr) (image.Image, error) {
 	return img, nil
 }
 
-func drawAddress(addrLines []string, name, pn string, addrFSize, nameFSize float64, width int, height int) (image.Image, error) {
+func drawAddress(ordID int, addrLines []string, name, pn string, addrFSize, nameFSize float64, width int, height int) (image.Image, error) {
 	addrF, err := draw.GetFont(addrFSize)
 	if err != nil {
 		return nil, err
@@ -131,11 +139,19 @@ func drawAddress(addrLines []string, name, pn string, addrFSize, nameFSize float
 	} else {
 		y = float64(height)
 		dc.SetFontFace(pnF)
-		dc.DrawStringAnchored(pn, float64(width)-5, y, 1, -1)
+		// dc.DrawStringAnchored(pn, float64(width)-5, y, 1, -1)
+		dc.DrawStringAnchored(pn, 5, y, 0, -0.5)
 		y -= (pnFSize + 5)
 		dc.SetFontFace(nameF)
 		dc.DrawStringAnchored(name, float64(width)-5, y, 1, -1)
 	}
+
+	ordF, err := draw.GetFont(20)
+	if err != nil {
+		return nil, errors.Wrap(err, "fail to draw from")
+	}
+	dc.SetFontFace(ordF)
+	dc.DrawStringAnchored(fmt.Sprintf("ord#%d", ordID), float64(width), float64(height), 1, -1)
 
 	return dc.Image(), nil
 }

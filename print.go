@@ -19,8 +19,8 @@ const (
 	tmpPngPath  = "/tmp/order_pic.png"
 )
 
-func printItems(items []*Item) error {
-	img, err := drawItems(items)
+func printItems(ordID int, items []*Item) error {
+	img, err := drawItems(ordID, items)
 	if err != nil {
 		return errors.Wrap(err, "fail to print from")
 	}
@@ -28,7 +28,6 @@ func printItems(items []*Item) error {
 		return errors.Wrap(err, "fail to print from")
 	}
 
-	// err = exec.Command("sh", "-c", "brother_ql -b pyusb -p usb://04f9:209b -m QL-800 print -l 62red --red "+tmpPngPath).Run()
 	err = exec.Command("sh", "-c", "brother_ql -b pyusb -p usb://04f9:209b -m QL-800 print -l 62 "+tmpPngPath).Run()
 	if err != nil {
 		return errors.Wrap(err, "fail to print from")
@@ -37,8 +36,8 @@ func printItems(items []*Item) error {
 	return nil
 }
 
-func printAddrFrom(addr *Addr) error {
-	img, err := drawAddressFrom(addr)
+func printAddrFrom(ordID int, addr *Addr) error {
+	img, err := drawAddressFrom(ordID, addr)
 	if err != nil {
 		return errors.Wrap(err, "fail to print from")
 	}
@@ -46,7 +45,6 @@ func printAddrFrom(addr *Addr) error {
 		return errors.Wrap(err, "fail to print from")
 	}
 
-	// err = exec.Command("sh", "-c", "brother_ql -b pyusb -p usb://04f9:209b -m QL-800 print -l 62red --red "+tmpPngPath).Run()
 	err = exec.Command("sh", "-c", "brother_ql -b pyusb -p usb://04f9:209b -m QL-800 print -l 62 "+tmpPngPath).Run()
 	if err != nil {
 		return errors.Wrap(err, "fail to print from")
@@ -55,8 +53,8 @@ func printAddrFrom(addr *Addr) error {
 	return nil
 }
 
-func printAddrTo(addr *Addr) error {
-	img, err := drawAddressTo(addr)
+func printAddrTo(ordID int, addr *Addr) error {
+	img, err := drawAddressTo(ordID, addr)
 	if err != nil {
 		return errors.Wrap(err, "fail to print from")
 	}
@@ -64,7 +62,6 @@ func printAddrTo(addr *Addr) error {
 		return errors.Wrap(err, "fail to print from")
 	}
 
-	// err = exec.Command("sh", "-c", "brother_ql -b pyusb -p usb://04f9:209b -m QL-800 print -r 90 -l 62red --red "+tmpPngPath).Run()
 	err = exec.Command("sh", "-c", "brother_ql -b pyusb -p usb://04f9:209b -m QL-800 print -r 90 -l 62 "+tmpPngPath).Run()
 	if err != nil {
 		return errors.Wrap(err, "fail to print from")
