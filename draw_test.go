@@ -6,24 +6,25 @@ import (
 	"testing"
 
 	"github.com/pkg/errors"
+	"github.com/suapapa/pr_label/order"
 )
 
 var (
-	ord = &Order{
+	ord = &order.Order{
 		ID: 20220926,
-		To: &Addr{
+		To: &order.Addr{
 			Line1:      "경기 성남시 분당구 판교역로 235 (에이치스퀘어 엔동)",
 			Line2:      "7층",
 			Name:       "카카오 엔터프라이즈",
 			PostNumber: "12345",
 		},
-		From: &Addr{
+		From: &order.Addr{
 			Line1:      "경기도 성남시 분당구 판교역로 166",
 			Line2:      "",
 			Name:       "판교 아지트",
 			PostNumber: "12345",
 		},
-		Items: []*Item{
+		Items: []*order.Item{
 			{Name: "panic-01", Cnt: 3},
 			{Name: "defer-01", Cnt: 3},
 			{Name: "ch-01", Cnt: 3},
@@ -32,7 +33,7 @@ var (
 )
 
 func TestPrintOrder(t *testing.T) {
-	ord := Order{
+	ord := order.Order{
 		ID:   1234567890,
 		From: ord.From,
 		To:   ord.To,

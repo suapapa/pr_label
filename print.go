@@ -7,6 +7,7 @@ import (
 	"os/exec"
 
 	"github.com/pkg/errors"
+	"github.com/suapapa/pr_label/order"
 )
 
 type Orient int
@@ -19,7 +20,7 @@ const (
 	tmpPngPath  = "/tmp/order_pic.png"
 )
 
-func printItems(ordID int, items []*Item) error {
+func printItems(ordID int, items []*order.Item) error {
 	img, err := drawItems(ordID, items)
 	if err != nil {
 		return errors.Wrap(err, "fail to print from")
@@ -36,7 +37,7 @@ func printItems(ordID int, items []*Item) error {
 	return nil
 }
 
-func printAddrFrom(ordID int, addr *Addr) error {
+func printAddrFrom(ordID int, addr *order.Addr) error {
 	img, err := drawAddressFrom(ordID, addr)
 	if err != nil {
 		return errors.Wrap(err, "fail to print from")
@@ -53,7 +54,7 @@ func printAddrFrom(ordID int, addr *Addr) error {
 	return nil
 }
 
-func printAddrTo(ordID int, addr *Addr) error {
+func printAddrTo(ordID int, addr *order.Addr) error {
 	img, err := drawAddressTo(ordID, addr)
 	if err != nil {
 		return errors.Wrap(err, "fail to print from")

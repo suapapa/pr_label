@@ -9,6 +9,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
+	"github.com/suapapa/pr_label/order"
 )
 
 var (
@@ -35,7 +36,7 @@ func main() {
 }
 
 func v1OrderHandler(c *gin.Context) {
-	var ord Order
+	var ord order.Order
 	if err := c.BindJSON(&ord); err != nil {
 		ret := map[string]any{
 			"status": http.StatusBadRequest,

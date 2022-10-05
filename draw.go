@@ -7,7 +7,8 @@ import (
 
 	"github.com/fogleman/gg"
 	"github.com/pkg/errors"
-	"github.com/suapapa/pr_ord_addr_label/draw"
+	"github.com/suapapa/pr_label/draw"
+	"github.com/suapapa/pr_label/order"
 	"golang.org/x/image/font"
 )
 
@@ -20,7 +21,7 @@ const (
 	fsOrd      = 60
 )
 
-func drawItems(ordID int, items []*Item) (image.Image, error) {
+func drawItems(ordID int, items []*order.Item) (image.Image, error) {
 	var ordLines []string
 	lineSpacing := 5
 	for _, item := range items {
@@ -55,7 +56,7 @@ func drawItems(ordID int, items []*Item) (image.Image, error) {
 	return dc.Image(), nil
 }
 
-func drawAddressFrom(ordID int, addr *Addr) (image.Image, error) {
+func drawAddressFrom(ordID int, addr *order.Addr) (image.Image, error) {
 	mw := ql800MaxPix
 	var addrF font.Face
 	var err error
@@ -75,7 +76,7 @@ func drawAddressFrom(ordID int, addr *Addr) (image.Image, error) {
 	return img, nil
 }
 
-func drawAddressTo(ordID int, addr *Addr) (image.Image, error) {
+func drawAddressTo(ordID int, addr *order.Addr) (image.Image, error) {
 	mw := (ql800MaxPix * 3) / 2
 	var addrF font.Face
 	var err error

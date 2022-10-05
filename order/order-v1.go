@@ -1,4 +1,4 @@
-package main
+package order
 
 type Order struct {
 	ID    int     `jsong:"id"`

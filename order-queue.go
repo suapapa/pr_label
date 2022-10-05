@@ -3,6 +3,8 @@ package main
 import (
 	"errors"
 	"sync"
+
+	"github.com/suapapa/pr_label/order"
 )
 
 const (
@@ -10,14 +12,14 @@ const (
 )
 
 type OrderQ struct {
-	q               []*Order
+	q               []*order.Order
 	pushIdx, popIdx int
 	sync.RWMutex
 }
 
 func NewOrderQ(qSize int) *OrderQ {
 	return &OrderQ{
-		q: make([]*Order, qSize),
+		q: make([]*order.Order, qSize),
 	}
 }
 
@@ -40,7 +42,7 @@ func (q *OrderQ) IsFull() bool {
 	return false // empty
 }
 
-func (q *OrderQ) Push(o *Order) error {
+func (q *OrderQ) Push(o *order.Order) error {
 	if q.IsFull() {
 		return errors.New("full Q")
 	}
@@ -57,7 +59,7 @@ func (q *OrderQ) Push(o *Order) error {
 	return nil
 }
 
-func (q *OrderQ) Pop() (*Order, error) {
+func (q *OrderQ) Pop() (*order.Order, error) {
 	if q.IsEmpty() {
 		return nil, errors.New("empty Q")
 	}

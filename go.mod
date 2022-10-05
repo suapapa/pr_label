@@ -1,4 +1,4 @@
-module github.com/suapapa/pr_ord_addr_label
+module github.com/suapapa/pr_label
 
 go 1.19
 
